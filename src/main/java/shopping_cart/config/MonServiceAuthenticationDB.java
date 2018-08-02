@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import shopping_cart.dao.Compte;
 import shopping_cart.dao.CompteDAO;
+import shopping_cart.entity.Compte;
 
 public class MonServiceAuthenticationDB implements UserDetailsService{
 

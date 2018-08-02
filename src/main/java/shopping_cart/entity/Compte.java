@@ -1,4 +1,4 @@
-package shopping_cart.dao;
+package shopping_cart.entity;
 
 public class Compte {
 
