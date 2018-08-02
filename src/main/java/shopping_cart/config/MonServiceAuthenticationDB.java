@@ -41,13 +41,13 @@ public class MonServiceAuthenticationDB implements UserDetailsService{
  
         grantList.add(authority);
  
-        boolean enabled = compte.estActif();
-        boolean accountNonExpired = true;
-        boolean credentialsNonExpired = true;
-        boolean accountNonLocked = true;
+        boolean activé = compte.estActif();
+        boolean compteNonExpiré = true;
+        boolean identifiantNonExpiré = true;
+        boolean compteNonBloqué = true;
  
-        UserDetails utilisateurDetails = (UserDetails) new User(compte.getnomUtilisateur(),compte.getPassword(), enabled, accountNonExpired, //
-                credentialsNonExpired, accountNonLocked, grantList);
+        UserDetails utilisateurDetails = (UserDetails) new User(compte.getnomUtilisateur(),compte.getPassword(), activé, compteNonExpiré, //
+                identifiantNonExpiré, compteNonBloqué, grantList);
  
         return utilisateurDetails;
     }
