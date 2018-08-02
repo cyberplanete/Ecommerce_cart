@@ -9,10 +9,10 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 
-
+//Configuration no XML (spring-mvc-demo-serlet.xml) 
 public class SpringWebAppInitializer implements WebApplicationInitializer{
 
-	//Configuration no XML (spring-mvc-demo-serlet.xml) 
+	
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		// Create the 'root' Spring application context
