@@ -26,7 +26,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	   @Override
 	   protected void configure(HttpSecurity http) throws Exception {
 	 
-	       http.csrf().disable();
+	       //Protection cross-site request forgery désactivée
+		   http.csrf().disable();
 	 
 
 	    // Les pages nécessitent une connexion en tant que EMPLOYEE ou MANAGER.
