@@ -49,6 +49,9 @@ public class CommandeDetail implements Serializable {
 		this.commandeID=commandeID;
 	}
 	
+	//ProduitID de commande detail à produitID de l'entity Produit
+	//Relation plusieurs à un seul. Exemple: Dans le detail de ma commande, je peux avoir plusieurs écrans comportant le meme id
+	//produit
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="PRODUIT_ID",nullable=false,foreignKey=@ForeignKey(name="COMMANDE_DETAIL_PRODUIT_ID_FK"))
 	public Produit getProduit() {
