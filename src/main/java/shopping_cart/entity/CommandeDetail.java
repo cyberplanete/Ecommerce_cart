@@ -62,6 +62,7 @@ public class CommandeDetail implements Serializable {
 		this.produitID=produitID;
 	}
 	
+	@Column(name="Quantité",nullable=false)
 	public int getQuantité() {
 		return quantité;
 	}
@@ -69,7 +70,8 @@ public class CommandeDetail implements Serializable {
 	public void setQuantité(int quantité) {
 		this.quantité = quantité;
 	}
-
+	
+	@Column(name="Montant",nullable=false)
 	public double getPrix() {
 		return prix;
 	}
@@ -77,7 +79,7 @@ public class CommandeDetail implements Serializable {
 	public void setPrix(double prix) {
 		this.prix = prix;
 	}
-
+	@Column(name="Montant", nullable=false)
 	public double getMontant() {
 		return montant;
 	}
