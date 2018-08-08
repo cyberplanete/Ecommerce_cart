@@ -20,14 +20,53 @@ public class InformationProduit {
 	}
 	
 	public InformationProduit(Produit produit) {
-		this.code = produit.getCode();
-		this.nom = produit.getNom();
-		this.prix = produit.getPrix();
+		this.setCode(produit.getCode());
+		this.setNom(produit.getNom());
+		this.setPrix(produit.getPrix());
 	}
 	
-	public int getPrix() {
-		// TODO Stub de la méthode généré automatiquement
-		return 0;
+	public InformationProduit(String code ,String nom, double prix) {
+		this.setCode(code);
+		this.setNom(nom);
+		this.setPrix(prix);
 	}
+	
+	
+	
+	public String getCode() {
+		return code;
+	}
+	
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
+	public double getPrix() {
+		return prix;
+	}
+
+	public void setPrix(double prix) {
+		this.prix = prix;
+	}
+
+	public boolean isNewProduit() {
+		return newProduit;
+	}
+
+	public void setNewProduit(boolean newProduit) {
+		this.newProduit = newProduit;
+	}
+
+	
+
+
 
 }
