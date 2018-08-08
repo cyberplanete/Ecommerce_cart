@@ -40,9 +40,20 @@ public class InformationPanier {
 			if (ligne.getInfoProduit().getCode().equals(Code)) {
 				return ligne;
 			}
-			
 		}
 		return null;
 	}
-
+	
+	//Si Produit inexistant ou pas en stock, le produit n'apparait pas dans le panier
+	public void ajouterProduit(InformationProduit informationProduit , int quantité) {
+		InformationLignePanier ligneProduit = this.trouverLigneParCode(informationProduit.getCode());
+		
+		if (ligneProduit == null) {
+			ligneProduit = new InformationLignePanier();
+			ligneProduit.setQuantité(0);
+			ligneProduit.setInfoProduit(informationProduit);
+			this.informationLignePaniers.add(ligneProduit);
+		}
+	}
+	
 }
