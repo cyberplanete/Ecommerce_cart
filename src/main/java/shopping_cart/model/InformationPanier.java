@@ -37,11 +37,12 @@ public class InformationPanier {
 	
 	private InformationLignePanier trouverLigneParCode(String Code) {
 		for (InformationLignePanier ligne : informationLignePaniers) {
-			if (ligne.getInfoProduit) {
-				
+			if (ligne.getInfoProduit().getCode().equals(Code)) {
+				return ligne;
 			}
 			
 		}
+		return null;
 	}
 
 }
