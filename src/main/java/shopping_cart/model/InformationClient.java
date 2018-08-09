@@ -7,4 +7,9 @@ public class InformationClient {
 		return null;
 	}
 
+	public boolean isValide() {
+		// TODO Stub de la méthode généré automatiquement
+		return false;
+	}
+
 }

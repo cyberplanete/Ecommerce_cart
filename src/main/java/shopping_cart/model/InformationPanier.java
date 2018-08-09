@@ -9,7 +9,7 @@ public class InformationPanier {
 	
 	private InformationClient informationClient;
 	
-	private final List<InformationProduitLignePanier> listPaniers = new ArrayList<InformationProduitLignePanier> ();
+	private final List<InformationProduitLignePanier> listePanier = new ArrayList<InformationProduitLignePanier> ();
 	
 	public InformationPanier() {
 		
@@ -32,11 +32,11 @@ public class InformationPanier {
 	}
 
 	public List<InformationProduitLignePanier> getInformationLignePaniers() {
-		return listPaniers;
+		return listePanier;
 	}
 	
 	private InformationProduitLignePanier trouverProduitParCode(String code) {
-		for (InformationProduitLignePanier ligne : listPaniers) {
+		for (InformationProduitLignePanier ligne : listePanier) {
 			if (ligne.getInfoProduit().getCode().equals(code)) {
 				return ligne;
 			}
@@ -53,11 +53,11 @@ public class InformationPanier {
 			produit = new InformationProduitLignePanier();
 			produit.setQuantité(0);
 			produit.setInfoProduit(informationProduit);
-			this.listPaniers.add(produit);
+			this.listePanier.add(produit);
 		}
 		int nouvelleQuantité = produit.getQuantité() + quantité;
 		if(nouvelleQuantité <= 0) {
-			this.listPaniers.remove(produit);
+			this.listePanier.remove(produit);
 		}else {
 			produit.setQuantité(nouvelleQuantité);
 		}
@@ -69,13 +69,33 @@ public class InformationPanier {
 	
 	public void updateProduct(String code, int quantité) {
 		InformationProduitLignePanier produitLignePanier = this.trouverProduitParCode(code);
+//		 Si produit non-présent dans la liste aucune action
 		if (produitLignePanier != null) {
 			if (quantité <= 0) {
-				this.listPaniers.remove(produitLignePanier);
+				this.listePanier.remove(produitLignePanier);
 			}else {
 				produitLignePanier.setQuantité(quantité);
 			}
 		}
 	}
+	
+	public void supprimeProduit(InformationProduit produit) {
+		InformationProduitLignePanier produitLignePanier = this.trouverProduitParCode(produit.getCode());
+		
+		if (produitLignePanier !=null) {
+			this.listePanier.remove(produitLignePanier);
+		}
+		
+	}
+	
+	public boolean isEmpty() {
+		return this.listePanier.isEmpty();
+	}
+	
+	public boolean isClientValide() {
+		return this.informationClient != null && this.informationClient.isValide();
+	}
+	
+	
 	
 }
