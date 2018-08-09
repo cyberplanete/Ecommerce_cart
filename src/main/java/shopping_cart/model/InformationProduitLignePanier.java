@@ -1,11 +1,11 @@
 package shopping_cart.model;
 
-public class InformationLignePanier {
+public class InformationProduitLignePanier {
 
 	private InformationProduit InfoProduit;
 	private int quantité;
 	
-	public InformationLignePanier() {
+	public InformationProduitLignePanier() {
 		this.setQuantité(0);
 	}
 

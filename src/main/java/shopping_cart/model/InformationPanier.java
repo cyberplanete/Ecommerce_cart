@@ -9,7 +9,7 @@ public class InformationPanier {
 	
 	private InformationClient informationClient;
 	
-	private final List<InformationLignePanier> informationLignePaniers = new ArrayList<InformationLignePanier> ();
+	private final List<InformationProduitLignePanier> listPaniers = new ArrayList<InformationProduitLignePanier> ();
 	
 	public InformationPanier() {
 		
@@ -31,28 +31,50 @@ public class InformationPanier {
 		this.informationClient = informationClient;
 	}
 
-	public List<InformationLignePanier> getInformationLignePaniers() {
-		return informationLignePaniers;
+	public List<InformationProduitLignePanier> getInformationLignePaniers() {
+		return listPaniers;
 	}
 	
-	private InformationLignePanier trouverLigneParCode(String Code) {
-		for (InformationLignePanier ligne : informationLignePaniers) {
-			if (ligne.getInfoProduit().getCode().equals(Code)) {
+	private InformationProduitLignePanier trouverProduitParCode(String code) {
+		for (InformationProduitLignePanier ligne : listPaniers) {
+			if (ligne.getInfoProduit().getCode().equals(code)) {
 				return ligne;
 			}
 		}
 		return null;
 	}
 	
-	//Si Produit inexistant ou pas en stock, le produit n'apparait pas dans le panier
+	
 	public void ajouterProduit(InformationProduit informationProduit , int quantité) {
-		InformationLignePanier ligneProduit = this.trouverLigneParCode(informationProduit.getCode());
+		InformationProduitLignePanier produit = this.trouverProduitParCode(informationProduit.getCode());
+//		 Si produit non-présent dans la liste alors je crée une référence à la nouvelle instance InformationLignePanier
+//		 pour permettre d'initialiser ligneProduit
+		if (produit == null) {
+			produit = new InformationProduitLignePanier();
+			produit.setQuantité(0);
+			produit.setInfoProduit(informationProduit);
+			this.listPaniers.add(produit);
+		}
+		int nouvelleQuantité = produit.getQuantité() + quantité;
+		if(nouvelleQuantité <= 0) {
+			this.listPaniers.remove(produit);
+		}else {
+			produit.setQuantité(nouvelleQuantité);
+		}
+	}
+	
+	public void validation () {
 		
-		if (ligneProduit == null) {
-			ligneProduit = new InformationLignePanier();
-			ligneProduit.setQuantité(0);
-			ligneProduit.setInfoProduit(informationProduit);
-			this.informationLignePaniers.add(ligneProduit);
+	}
+	
+	public void updateProduct(String code, int quantité) {
+		InformationProduitLignePanier produitLignePanier = this.trouverProduitParCode(code);
+		if (produitLignePanier != null) {
+			if (quantité <= 0) {
+				this.listPaniers.remove(produitLignePanier);
+			}else {
+				produitLignePanier.setQuantité(quantité);
+			}
 		}
 	}
 	
