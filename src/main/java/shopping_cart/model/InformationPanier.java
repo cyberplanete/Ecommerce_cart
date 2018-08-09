@@ -31,7 +31,7 @@ public class InformationPanier {
 		this.informationClient = informationClient;
 	}
 
-	public List<InformationProduitLignePanier> getInformationLignePaniers() {
+	public List<InformationProduitLignePanier> getInformationLignesPaniers() {
 		return listePanier;
 	}
 	
@@ -67,7 +67,7 @@ public class InformationPanier {
 		
 	}
 	
-	public void updateProduct(String code, int quantité) {
+	public void miseAJourProduit(String code, int quantité) {
 		InformationProduitLignePanier produitLignePanier = this.trouverProduitParCode(code);
 //		 Si produit non-présent dans la liste aucune action
 		if (produitLignePanier != null) {
@@ -96,6 +96,27 @@ public class InformationPanier {
 		return this.informationClient != null && this.informationClient.isValide();
 	}
 	
+	public int getQuantitéTotale() {
+		int quantité = 0 ;
+		for (InformationProduitLignePanier produitLignePanier : listePanier) {
+			quantité += produitLignePanier.getQuantité();
+		}return quantité;
+	}
 	
+	public double getMontantTotale() {
+		double total = 0;
+		for (InformationProduitLignePanier produitLignePanier : listePanier) {
+			total += produitLignePanier.getMontant(); 
+		}return total;
+	}
+	//Mise à jour via formulaire
+	public void miseAJourQuantité(InformationPanier formulaireInformationProduit) {
+		if (formulaireInformationProduit != null) {
+			List<InformationProduitLignePanier> listeDeProduits = formulaireInformationProduit.getInformationLignesPaniers();
+			for (InformationProduitLignePanier produit : listeDeProduits) {
+				this.miseAJourProduit(produit.getInfoProduit().getCode(),produit.getQuantité());
+			}
+		}
+	}
 	
 }
