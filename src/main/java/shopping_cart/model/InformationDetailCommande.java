@@ -1,6 +1,6 @@
 package shopping_cart.model;
 
-public class InformationCommande {
+public class InformationDetailCommande {
 	
 	private String id;
 	
@@ -13,13 +13,13 @@ public class InformationCommande {
 	private double montant ;
 
 	
-	public InformationCommande() {
+	public InformationDetailCommande() {
 		
 	}
 	
 	
 	//Utilisation hibernate query
-	public InformationCommande(String id, String codeProduit, int quantité, double prix, double montant) {
+	public InformationDetailCommande(String id, String codeProduit, int quantité, double prix, double montant) {
 		this.id=id;
 		this.codeProduit = codeProduit;
 		this.quantité = quantité;
