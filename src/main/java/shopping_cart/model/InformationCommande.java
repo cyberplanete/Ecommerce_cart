@@ -17,6 +17,8 @@ public class InformationCommande {
 	private String codePostalClient;
 	private String téléphoneClient;
 	
+	
+
 	private List<CommandeDetail>listdetailsCommande;
 	
 	public InformationCommande() {
@@ -98,6 +100,12 @@ public class InformationCommande {
 
 	public void setListdetailsCommande(List<CommandeDetail> listdetailsCommande) {
 		this.listdetailsCommande = listdetailsCommande;
+	}
+	public String getTéléphoneClient() {
+		return téléphoneClient;
+	}
+	public void setTéléphoneClient(String téléphoneClient) {
+		this.téléphoneClient = téléphoneClient;
 	}
 	
 }
