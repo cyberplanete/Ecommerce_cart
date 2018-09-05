@@ -17,7 +17,7 @@ public class PaginationResultat<T> {
 	
 	private int enregistrementsTotal;
 	private int pageActuel;
-	private List<T>list;
+	private List<T>liste;
 	private int resultatMax;
 	private int pagesTotal;
 	
@@ -36,12 +36,33 @@ public class PaginationResultat<T> {
 		
 		List resultats = new ArrayList<>();
 		
-		boolean A_Un_Resultat = rScrollableResults.first();
+		boolean db_A_Un_enregistrement = rScrollableResults.first();
 		
-		if (A_Un_Resultat) {
+		if (db_A_Un_enregistrement) {
+			// scroll vers la position
+			db_A_Un_enregistrement = rScrollableResults.scroll(depuisEnregistrementIndex);
 			
-			A_Un_Resultat = rScrollableResults.scroll(depuisEnregistrementIndex);
+			if (db_A_Un_enregistrement) {
+				do {
+					T enregistrement = (T) rScrollableResults.get(0);
+					resultats.add(enregistrement);
+					
+				} while (rScrollableResults.next()
+						&& rScrollableResults.getRowNumber() >= depuisEnregistrementIndex
+						&& rScrollableResults.getRowNumber() < maxEnregistrementIndex);
+			}
+		
+			//dernière enregistrement
+			rScrollableResults.last();
 		}
+		//Total d'enregistrments
+		this.enregistrementsTotal = rScrollableResults.getRowNumber()+1;
+		this.pageActuel = pageIndex +1 ;
+		this.liste = resultats;
+		this.resultatMax = resultatMax;
+		
+		this.pagesTotal = (this.enregistrementsTotal / this.resultatMax) + 1 ;
+		this.maxNavigationPage = maxNavigationPage;
 		
 	}
 	
