@@ -64,7 +64,68 @@ public class PaginationResultat<T> {
 		this.pagesTotal = (this.enregistrementsTotal / this.resultatMax) + 1 ;
 		this.maxNavigationPage = maxNavigationPage;
 		
+		if (maxNavigationPage < pagesTotal) {
+			this.maxNavigationPage = maxNavigationPage;
+		}
+		
+		this.calculPagesNavigation();
+	}
+
+	private void calculPagesNavigation() {
+		this.navigationPages = new ArrayList<Integer>();
+		
+		int nouvellePageActuel = this.pageActuel > this.pagesTotal ? this.pagesTotal : this.pageActuel;
+		
+		int début = nouvellePageActuel - this.maxNavigationPage / 2;
+		int fin = nouvellePageActuel + this.maxNavigationPage /2;
+		
+		//première page
+		navigationPages.add(1);
+		if (début > 1) {
+			navigationPages.add(-1);
+		}
+		
+		for(int i = début; i < fin; i++) {
+			if (i>1 &&i<this.pagesTotal) {
+				navigationPages.add(i);
+			}
+
+		}
+		
+		if (fin < this.pagesTotal - 2) {
+			navigationPages.add(-1);
+			
+		}
+		//dernière Page
+		navigationPages.add(this.pagesTotal);
+		
+	}
+
+	public int getEnregistrementsTotal() {
+		return enregistrementsTotal;
+	}
+
+	public int getPageActuel() {
+		return pageActuel;
+	}
+
+	public List<T> getListe() {
+		return liste;
+	}
+
+	public int getResultatMax() {
+		return resultatMax;
+	}
+
+	public int getPagesTotal() {
+		return pagesTotal;
+	}
+
+	public List<Integer> getNavigationPages() {
+		return navigationPages;
 	}
 	
 
+	
+	
 }
