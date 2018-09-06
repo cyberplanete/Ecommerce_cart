@@ -10,11 +10,10 @@ public interface ProduitDAO {
 	
 	public InformationProduit findInformationProduit(String code);
 	
-	public PaginationResultat<InformationProduit> queryProducts(int page,
+	public PaginationResultat<InformationProduit> requetteProduit(int page,
              int maxResult, int maxNavigationPage  );
 
-	public PaginationResultat<InformationProduit> queryProducts(int page, int maxResult,
-             int maxNavigationPage, String likeName);
+	public PaginationResultat<InformationProduit> requetteProduit(int page, int maxResult,int maxNavigationPage, String likeName);
 
 	public void save(InformationProduit productInfo);
 }
