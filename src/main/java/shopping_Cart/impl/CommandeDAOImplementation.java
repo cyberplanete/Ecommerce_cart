@@ -1,12 +1,17 @@
-package shopping_cart.dao;
+package shopping_Cart.impl;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import shopping_cart.dao.CommandeDAO;
+import shopping_cart.dao.ProduitDAO;
+import shopping_cart.entity.Commande;
 import shopping_cart.model.InformationCommande;
 import shopping_cart.model.InformationDetailCommande;
 import shopping_cart.model.InformationPanier;
@@ -30,12 +35,31 @@ public class CommandeDAOImplementation implements CommandeDAO{
 
 	private Session session;
 	
+	@Autowired
 	private ProduitDAO produitDAO;
 
 	@Override
 	public void sauvegardeCommande(InformationPanier informationPanier) {
-		// TODO Stub de la méthode généré automatiquement
+		// Obtenir la session en cours d'hibernate
+		session = sessionFactory.openSession();
 		
+		int numeroCommande =  this.getMaxNumeroCommande() + 1;
+		Commande commande = new Commande();
+		
+		commande.setId(UUID.randomUUID().toString());
+		commande.setNuméroDeCommande(numeroCommande);
+		commande.setDateDeCommande(new Date());
+		commande.setMontant(informationPanier.getMontantTotale());
+		
+		
+		
+		
+		
+	}
+
+	private int getMaxNumeroCommande() {
+		// TODO Stub de la méthode généré automatiquement
+		return 0;
 	}
 
 	@Override

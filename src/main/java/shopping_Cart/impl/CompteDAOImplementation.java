@@ -1,4 +1,4 @@
-package shopping_cart.dao;
+package shopping_Cart.impl;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -9,7 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import shopping_cart.dao.CompteDAO;
 import shopping_cart.entity.Compte;
 
 //Transactionnel pour Hibernate
