@@ -12,9 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import shopping_cart.dao.CommandeDAO;
 import shopping_cart.dao.ProduitDAO;
 import shopping_cart.entity.Commande;
+import shopping_cart.entity.CommandeDetail;
+import shopping_cart.model.InformationClient;
 import shopping_cart.model.InformationCommande;
 import shopping_cart.model.InformationDetailCommande;
 import shopping_cart.model.InformationPanier;
+import shopping_cart.model.InformationProduitLignePanier;
 import shopping_cart.model.PaginationResultat;
 
 @Transactional
@@ -51,9 +54,26 @@ public class CommandeDAOImplementation implements CommandeDAO{
 		commande.setDateDeCommande(new Date());
 		commande.setMontant(informationPanier.getMontantTotale());
 		
+		InformationClient informationClient = informationPanier.getInformationClient();
+		commande.setNomClient(informationClient.getNom());
+		commande.setEmailClient(informationClient.getEmail());
+		commande.setTéléphoneClient(informationClient.getTelephone());
+		commande.setAddresseClient(informationClient.getAdresse_rue());
+		commande.setCode_postal(informationClient.getAdresse_codePostal());
 		
+		session.persist(commande);
 		
+		List<InformationProduitLignePanier> listLignesProduit = informationPanier.getInformationLignesPaniers();
 		
+		for (InformationProduitLignePanier informationProduitLignePanier : listLignesProduit) {
+			CommandeDetail commandeDetail = new CommandeDetail();
+			commandeDetail.setId(UUID.randomUUID().toString());
+			//id de la commande
+			commandeDetail.setCommande(commande);
+			commandeDetail.setMontant(informationProduitLignePanier.getMontant());
+			commandeDetail.setPrix(informationProduitLignePanier.getInfoProduit().getPrix());
+			
+		}
 		
 	}
 

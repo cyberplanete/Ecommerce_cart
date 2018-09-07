@@ -26,7 +26,8 @@ public class Commande implements Serializable{
     private double montant;
  
     private String nomClient;
-    private String addresseClient;
+    private String addresseClientRue;
+    private String code_postal;
     private String emailClient;
     private String téléphoneClient;
 	
@@ -71,10 +72,10 @@ public class Commande implements Serializable{
 	}
 	@Column(name = "Client_Addresse",length=255,nullable=false)
 	public String getAddresseClient() {
-		return addresseClient;
+		return addresseClientRue;
 	}
-	public void setAddresseClient(String addresseClient) {
-		this.addresseClient = addresseClient;
+	public void setAddresseClient(String addresseClientRue) {
+		this.addresseClientRue = addresseClientRue;
 	}
 	@Column(name = "Client_Email",length=128,nullable=false)
 	public String getEmailClient() {
@@ -89,6 +90,12 @@ public class Commande implements Serializable{
 	}
 	public void setTéléphoneClient(String téléphoneClient) {
 		this.téléphoneClient = téléphoneClient;
+	}
+	public String getCode_postal() {
+		return code_postal;
+	}
+	public void setCode_postal(String code_postal) {
+		this.code_postal = code_postal;
 	}
 	
 
