@@ -27,9 +27,7 @@ public class CompteDAOImplementation implements CompteDAO{
 	@Override
 	public Compte trouverCompte(String nomUtilisateur) {
 		
-		// Obtenir la session en cours d'hibernate
-		session = sessionFactory.openSession();
-		
+			
 		// Obtenir la session en cours d'hibernate
 				session = sessionFactory.openSession();
 

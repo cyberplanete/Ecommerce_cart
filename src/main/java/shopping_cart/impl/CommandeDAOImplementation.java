@@ -4,8 +4,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +18,8 @@ import shopping_cart.dao.CommandeDAO;
 import shopping_cart.dao.ProduitDAO;
 import shopping_cart.entity.Commande;
 import shopping_cart.entity.CommandeDetail;
+import shopping_cart.entity.Compte;
+import shopping_cart.entity.Produit;
 import shopping_cart.model.InformationClient;
 import shopping_cart.model.InformationCommande;
 import shopping_cart.model.InformationDetailCommande;
@@ -72,9 +79,15 @@ public class CommandeDAOImplementation implements CommandeDAO{
 			commandeDetail.setCommande(commande);
 			commandeDetail.setMontant(informationProduitLignePanier.getMontant());
 			commandeDetail.setPrix(informationProduitLignePanier.getInfoProduit().getPrix());
+			commandeDetail.setQuantité(informationProduitLignePanier.getQuantité());
 			
+			String code = informationProduitLignePanier.getInfoProduit().getCode();
+			Produit produit = this.produitDAO.findProduit(code);
+			commandeDetail.setProduit(produit);
+			
+			session.persist(commandeDetail);
 		}
-		
+		informationPanier.setNuméroCommande(numeroCommande);
 	}
 
 	private int getMaxNumeroCommande() {
@@ -85,18 +98,45 @@ public class CommandeDAOImplementation implements CommandeDAO{
 	@Override
 	public PaginationResultat<InformationCommande> listInformationCommande(int page, int resultatMax,
 			int maxNavigationPage) {
+		String sql = "Select new" + InformationCommande.class.getName()
+				+ "(Commandes.ID, Commandes.commande_Date,Commandes.commande_Num,Commandes.Montant, "
+				+ "Commandes.Client_Nom, Commandes.Client_Adresse, Commandes.Client_Email, Commandes.Client_Téléphone)" + "from"
+				+ Commande.class.getName() + "Commandes"//
+				+ "order by Commandes.commande_Num desc";
+		// Obtenir la session en cours d'hibernate
+				session = sessionFactory.openSession();
+				Query query = session.createQuery(sql);
+				
+				
+		return new PaginationResultat<InformationCommande>(query,page,resultatMax,maxNavigationPage);
+	}
+
+	
+	public Commande findCommande(String commandeID) {
+		// Obtenir la session en cours d'hibernate
+		session = sessionFactory.openSession();
+
+		// Creation du Critère
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Commande> criteriaQuery = builder.createQuery(Commande.class);
+		
+		
+		Root<Commande> commande = criteriaQuery.from(Commande.class);
+		criteriaQuery.select(commande);
+		criteriaQuery.where(builder.equal(commande.get("ID"), commandeID));
+		Query<Commande> maQuery = session.createQuery(criteriaQuery);
+		Commande uneCommande = maQuery.getSingleResult();
+		return uneCommande ;
+	}
+
+	@Override
+	public List<InformationDetailCommande> listCommandeDetailInfos(String orderID) {
 		// TODO Stub de la méthode généré automatiquement
 		return null;
 	}
 
 	@Override
 	public InformationCommande getInformationDeCommande(String commandeID) {
-		// TODO Stub de la méthode généré automatiquement
-		return null;
-	}
-
-	@Override
-	public List<InformationDetailCommande> listCommandeDetailInfos(String orderID) {
 		// TODO Stub de la méthode généré automatiquement
 		return null;
 	}
