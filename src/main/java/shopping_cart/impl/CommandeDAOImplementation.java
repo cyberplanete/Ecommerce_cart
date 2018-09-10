@@ -1,4 +1,4 @@
-package shopping_Cart.impl;
+package shopping_cart.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -18,7 +18,6 @@ import shopping_cart.dao.CommandeDAO;
 import shopping_cart.dao.ProduitDAO;
 import shopping_cart.entity.Commande;
 import shopping_cart.entity.CommandeDetail;
-import shopping_cart.entity.Compte;
 import shopping_cart.entity.Produit;
 import shopping_cart.model.InformationClient;
 import shopping_cart.model.InformationCommande;

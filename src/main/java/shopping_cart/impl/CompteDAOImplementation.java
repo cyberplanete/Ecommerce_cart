@@ -1,4 +1,4 @@
-package shopping_Cart.impl;
+package shopping_cart.impl;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
