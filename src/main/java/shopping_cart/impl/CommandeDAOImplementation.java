@@ -130,15 +130,35 @@ public class CommandeDAOImplementation implements CommandeDAO{
 	}
 
 	@Override
-	public List<InformationDetailCommande> listCommandeDetailInfos(String orderID) {
-		// TODO Stub de la méthode généré automatiquement
-		return null;
+	public List<InformationDetailCommande> listCommandeDetailInfos(String commandeID) {
+		
+		String sql = "Select new " + InformationDetailCommande.class.getName()
+				+ "(d.id, d.produit_id, d.produit_nom , d.quanitté,d.prix,d.montant) "//
+                + " from " + CommandeDetail.class.getName() + " d "//
+                + " where d.commandes.id = : commandeID";
+		
+		// Obtenir la session en cours d'hibernate
+				session = sessionFactory.openSession();
+
+				// Creation du Critère
+				CriteriaBuilder builder = session.getCriteriaBuilder();
+				CriteriaQuery<InformationDetailCommande> criteriaQuery = builder.createQuery(InformationDetailCommande.class);
+		
+				Query<InformationDetailCommande> maQuery = session.createQuery(criteriaQuery);
+				 maQuery.setParameter("commandeID",commandeID);
+		
+		return maQuery.list();
 	}
 
 	@Override
 	public InformationCommande getInformationDeCommande(String commandeID) {
-		// TODO Stub de la méthode généré automatiquement
-		return null;
+		Commande commande = this.findCommande(commandeID);
+		if (commande == null) {
+			return null;
+		}
+		return new InformationCommande(commande.getId(),commande.getDateDeCommande(),//
+				commande.getNuméroDeCommande(), commande.getMontant(), commande.getNomClient(),commande.getAddresseClient(),//
+				commande.getEmailClient(), commande.getTéléphoneClient());
 	}
 	
 	
