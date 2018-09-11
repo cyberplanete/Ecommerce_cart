@@ -99,15 +99,30 @@ public class ProduitDAOImpl implements ProduitDAO {
 
 	@Override
 	public PaginationResultat<InformationProduit> requetteProduit(int page, int maxResult, int maxNavigationPage) {
-		// TODO Stub de la méthode généré automatiquement
-		return null;
+		
+				
+		return requetteProduit(page, maxResult, maxNavigationPage, null);
 	}
 
 	@Override
 	public PaginationResultat<InformationProduit> requetteProduit(int page, int maxResult, int maxNavigationPage,
-			String likeName) {
-		// TODO Stub de la méthode généré automatiquement
-		return null;
+			String commeNom) {
+		String sql = "Select new "  + InformationProduit.class.getName()
+				+ "(p.code ,  p.nom, p.prix) " + "from " 
+				+ Produit.class.getName() + "p" ;
+		if (commeNom != null && commeNom.length() > 0) {
+			sql += "Where lower(p.nom) like : commeNom" ;
+		}
+		sql += " order by p.createDate desc";
+		
+		session = sessionFactory.getCurrentSession();
+		
+		Query query = session.createQuery(sql);
+		
+		if (commeNom != null && commeNom.length() > 0) {
+			query.setParameter("commeNom", "%"+commeNom.toLowerCase() + "%");
+		}
+		return new PaginationResultat<InformationProduit>(query,page,maxResult,maxNavigationPage);
 	}
 
 	
