@@ -24,7 +24,8 @@ public class InformationProduitValidateur implements Validator {
 	    public void validate(Object target, Errors erreurs) {
 	    	InformationProduit informationProduit = (InformationProduit) target;
 	 
-	        // Check the fields of ProductInfo class.
+	        // Vérification des champs pour la class information produit.
+	    	//Les messages d'erreurs sont configurés dans le fichier messages/validator.properties
 	        ValidationUtils.rejectIfEmptyOrWhitespace(erreurs, "code", "NotEmpty.formProduit.code");
 	        ValidationUtils.rejectIfEmptyOrWhitespace(erreurs, "nom", "NotEmpty.formProduit.nom");
 	        ValidationUtils.rejectIfEmptyOrWhitespace(erreurs, "prix", "NotEmpty.formProduit.prix");
