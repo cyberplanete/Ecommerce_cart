@@ -22,13 +22,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import crm.config.AccountDAO;
-import crm.config.AccountDAOImpl;
-import crm.config.OrderDAO;
-import crm.config.OrderDAOImpl;
-import crm.config.ProductDAO;
-import crm.config.ProductDAOImpl;
-
 //Remplace config.xml
 
 @EnableWebMvc

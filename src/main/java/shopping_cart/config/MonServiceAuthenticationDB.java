@@ -46,7 +46,7 @@ public class MonServiceAuthenticationDB implements UserDetailsService{
         boolean identifiantNonExpiré = true;
         boolean compteNonBloqué = true;
  
-        UserDetails utilisateurDetails = (UserDetails) new User(compte.getnomUtilisateur(),compte.getPassword(), activé, compteNonExpiré, //
+        UserDetails utilisateurDetails = (UserDetails) new User(compte.getNomUtilisateur(),compte.getPassword(), activé, compteNonExpiré, //
                 identifiantNonExpiré, compteNonBloqué, grantList);
  
         return utilisateurDetails;

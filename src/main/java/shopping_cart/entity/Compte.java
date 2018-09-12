@@ -39,7 +39,7 @@ public class Compte implements Serializable{
 	}
 	
 	@Column(name = "Active", length = 1, nullable = false)
-	public boolean isActive() {
+	public boolean estActif() {
 		return active;
 	}
 	public void setActive(boolean active) {
