@@ -22,6 +22,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import shopping_cart.dao.CommandeDAO;
+import shopping_cart.dao.CompteDAO;
+import shopping_cart.dao.ProduitDAO;
+import shopping_cart.impl.CommandeDAOImplementation;
+import shopping_cart.impl.CompteDAOImplementation;
+import shopping_cart.impl.ProduitDAOImpl;
+
 //Remplace config.xml
 
 @EnableWebMvc
@@ -102,24 +109,24 @@ public class ApplicationContextConfig implements WebMvcConfigurer{
 	 
 	        return transactionManager;
 	    }
-	 @Bean(name = "accountDAO")
-	    public AccountDAO getApplicantDAO() {
-	        return new AccountDAOImpl();
+	 	@Bean(name = "compteDAO")
+	    public CompteDAO getApplicantDAO() {
+	        return new CompteDAOImplementation();
 	    }
 	 
-	    @Bean(name = "productDAO")
-	    public ProductDAO getProductDAO() {
-	        return new ProductDAOImpl();
+	    @Bean(name = "produitDAO")
+	    public ProduitDAO getProductDAO() {
+	        return new ProduitDAOImpl();
 	    }
 	 
-	    @Bean(name = "orderDAO")
-	    public OrderDAO getOrderDAO() {
-	        return new OrderDAOImpl();
+	    @Bean(name = "commandeDAO")
+	    public CommandeDAO getOrderDAO() {
+	        return new CommandeDAOImplementation();
 	    }
 	     
 	    @Bean(name = "accountDAO")
-	    public AccountDAO getAccountDAO()  {
-	        return new AccountDAOImpl();
+	    public CompteDAO getAccountDAO()  {
+	        return new CompteDAOImplementation();
 	    }
 	
 }
