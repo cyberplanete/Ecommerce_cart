@@ -102,6 +102,17 @@ public class ApplicationContextConfig implements WebMvcConfigurer{
 	            }
 	        };
 	 }
+	
+	// Configuration des messages d'erreurs  messages/validateur.properties
+	 
+	@Bean
+	public ResourceBundleMessageSource messageSource() {
+	   ResourceBundleMessageSource rb = new ResourceBundleMessageSource();
+	   
+	   rb.setBasenames(new String[] { "messages/validateur"});
+	   return rb;
+	}
+	
 	 @Autowired
 	    @Bean(name = "transactionManager")
 	    public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
