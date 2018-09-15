@@ -1,18 +1,24 @@
 package ecommerce_panier.controlleur;
 
-import java.lang.annotation.Target;
-
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ecommerce_panier.dao.CommandeDAO;
 import ecommerce_panier.dao.ProduitDAO;
@@ -73,7 +79,7 @@ public class ControlleurPrincipal {
  
     // Page liste produit.
     @RequestMapping({ "/listeProduit" })
-    public String listProductHandler(Model model, //
+    public String listeProduitGestionnaire(Model model, //
             @RequestParam(value = "nom", defaultValue = "") String commeNom,
             @RequestParam(value = "page", defaultValue = "1") int page) {
         final int maxResult = 5;
@@ -87,7 +93,7 @@ public class ControlleurPrincipal {
     }
  
     @RequestMapping({ "/acheterProduit" })
-    public String listProductHandler(HttpServletRequest request, Model model, //
+    public String listeProduitGestionnaire(HttpServletRequest request, Model model, //
             @RequestParam(value = "code", defaultValue = "") String code) {
  
         Produit produit = null;
@@ -107,166 +113,166 @@ public class ControlleurPrincipal {
         return "redirect:/shoppingCart";
     }
  
-    @RequestMapping({ "/shoppingCartRemoveProduct" })
-    public String removeProductHandler(HttpServletRequest request, Model model, //
+    @RequestMapping({ "/EcommerceRemoveProduit" })
+    public String EnleverProduitGestionnaire(HttpServletRequest request, Model model, //
             @RequestParam(value = "code", defaultValue = "") String code) {
-        Product product = null;
+        Produit produit = null;
         if (code != null && code.length() > 0) {
-            product = produitDAO.findProduct(code);
+            produit = produitDAO.findProduit(code);
         }
-        if (product != null) {
+        if (produit != null) {
  
             // Cart Info stored in Session.
-            CartInfo cartInfo = Utils.getCartInSession(request);
+            InformationPanier informationPanier = Utilitaires.getDerniereCommandePanierDansSession(request);
  
-            ProductInfo productInfo = new ProductInfo(product);
+            InformationProduit informationProduit = new InformationProduit(produit);
  
-            cartInfo.removeProduct(productInfo);
+            informationPanier.supprimeProduit(informationProduit);
  
         }
-        // Redirect to shoppingCart page.
-        return "redirect:/shoppingCart";
+        // Redirection vers la page du site ecommerce
+        return "redirect:/ecommerce";
     }
  
-    // POST: Update quantity of products in cart.
-    @RequestMapping(value = { "/shoppingCart" }, method = RequestMethod.POST)
-    public String shoppingCartUpdateQty(HttpServletRequest request, //
+    // POST: Mise à jour de la quantité de produit dans le panier.
+    @RequestMapping(value = { "/ecommerce" }, method = RequestMethod.POST)
+    public String eccommerceMiseàJourQuantité(HttpServletRequest request, //
             Model model, //
-            @ModelAttribute("cartForm") CartInfo cartForm) {
+            @ModelAttribute("formulairePanierJSP") InformationPanier formulairePanier) {
  
-        CartInfo cartInfo = Utils.getCartInSession(request);
-        cartInfo.updateQuantity(cartForm);
+        InformationPanier informationPanier = Utilitaires.getDerniereCommandePanierDansSession(request);
+        informationPanier.miseAJourQuantité(formulairePanier);
  
-        // Redirect to shoppingCart page.
+        // Redirection vers la page Ecommerce.
         return "redirect:/shoppingCart";
     }
  
-    // GET: Show Cart
-    @RequestMapping(value = { "/shoppingCart" }, method = RequestMethod.GET)
-    public String shoppingCartHandler(HttpServletRequest request, Model model) {
-        CartInfo myCart = Utils.getCartInSession(request);
+    // GET: Montrer le panier
+    @RequestMapping(value = { "/ecommerce" }, method = RequestMethod.GET)
+    public String gestionnaireEccommerce(HttpServletRequest request, Model model) {
+        InformationPanier monPanier = Utilitaires.getDerniereCommandePanierDansSession(request);
  
-        model.addAttribute("cartForm", myCart);
+        model.addAttribute("formulairePanierJSP", monPanier);
         return "shoppingCart";
     }
  
-    // GET: Enter customer information.
-    @RequestMapping(value = { "/shoppingCartCustomer" }, method = RequestMethod.GET)
+    // GET: Entrer les informations du client.
+    @RequestMapping(value = { "/panierClient" }, method = RequestMethod.GET)
     public String shoppingCartCustomerForm(HttpServletRequest request, Model model) {
  
-        CartInfo cartInfo = Utils.getCartInSession(request);
+        InformationPanier informationPanier = Utilitaires.getDerniereCommandePanierDansSession(request);
       
-        // Cart is empty.
-        if (cartInfo.isEmpty()) {
+        // panier est vide ?.
+        if (informationPanier.isEmpty()) {
              
-            // Redirect to shoppingCart page.
-            return "redirect:/shoppingCart";
+            // Redirection vers la page principale.
+            return "redirect:/ecommerce";
         }
  
-        CustomerInfo customerInfo = cartInfo.getCustomerInfo();
-        if (customerInfo == null) {
-            customerInfo = new CustomerInfo();
+        InformationClient informationClient = informationPanier.getInformationClient();
+        if (informationClient == null) {
+            informationClient = new InformationClient();
         }
  
-        model.addAttribute("customerForm", customerInfo);
+        model.addAttribute("formulaireClient", informationClient);
  
-        return "shoppingCartCustomer";
+        return "panierClient";
     }
  
-    // POST: Save customer information.
-    @RequestMapping(value = { "/shoppingCartCustomer" }, method = RequestMethod.POST)
-    public String shoppingCartCustomerSave(HttpServletRequest request, //
+    // POST: sauvegarder les informations client
+    @RequestMapping(value = { "/panierClient" }, method = RequestMethod.POST)
+    public String sauvegardeClient(HttpServletRequest request, //
             Model model, //
-            @ModelAttribute("customerForm") @Validated CustomerInfo customerForm, //
-            BindingResult result, //
+            @ModelAttribute("formulaireClientJSP") @Validated InformationClient formulaireClient, //
+            BindingResult resultat, //
             final RedirectAttributes redirectAttributes) {
   
-        // If has Errors.
-        if (result.hasErrors()) {
-            customerForm.setValid(false);
-            // Forward to reenter customer info.
-            return "shoppingCartCustomer";
+        // Si erreurs.
+        if (resultat.hasErrors()) {
+            formulaireClient.setValide(false);
+            // Redirection pour ré entrer les informations client.
+            return "panierClient";
         }
  
-        customerForm.setValid(true);
-        CartInfo cartInfo = Utils.getCartInSession(request);
+        formulaireClient.setValide(true);
+        InformationPanier informationPanier = Utilitaires.getDerniereCommandePanierDansSession(request);
  
-        cartInfo.setCustomerInfo(customerForm);
+        informationPanier.setInformationClient(formulaireClient);
  
-        // Redirect to Confirmation page.
-        return "redirect:/shoppingCartConfirmation";
+        // Redirection vers la page de confirmation.
+        return "redirect:/ecommerceConfirmation";
     }
  
-    // GET: Review Cart to confirm.
-    @RequestMapping(value = { "/shoppingCartConfirmation" }, method = RequestMethod.GET)
-    public String shoppingCartConfirmationReview(HttpServletRequest request, Model model) {
-        CartInfo cartInfo = Utils.getCartInSession(request);
+    // GET: Verification du panier et confirmer.
+    @RequestMapping(value = { "/ecommerceConfirmation" }, method = RequestMethod.GET)
+    public String verificationPanierConfirmation(HttpServletRequest request, Model model) {
+        InformationPanier informationPanier = Utilitaires.getDerniereCommandePanierDansSession(request);
  
-        // Cart have no products.
-        if (cartInfo.isEmpty()) {
-            // Redirect to shoppingCart page.
-            return "redirect:/shoppingCart";
-        } else if (!cartInfo.isValidCustomer()) {
-            // Enter customer info.
-            return "redirect:/shoppingCartCustomer";
+        // Panier n'a pas de produit
+        if (informationPanier.isEmpty()) {
+            //Redurection vers la page panier
+            return "redirect:/panier";
+        } else if (!informationPanier.isClientValide()) {
+            // Entrer les informations Client.
+            return "redirect:/panierClient";
         }
  
         return "shoppingCartConfirmation";
     }
  
-    // POST: Send Cart (Save).
-    @RequestMapping(value = { "/shoppingCartConfirmation" }, method = RequestMethod.POST)
-    // Avoid UnexpectedRollbackException (See more explanations)
+    // POST: Sauvegarde panier (Save).
+    @RequestMapping(value = { "/confirmationPanier" }, method = RequestMethod.POST)
+    // Eviter UnexpectedRollbackException (See more explanations)
     @Transactional(propagation = Propagation.NEVER)
-    public String shoppingCartConfirmationSave(HttpServletRequest request, Model model) {
-        CartInfo cartInfo = Utils.getCartInSession(request);
+    public String sauvegardeConfirmationPanier(HttpServletRequest request, Model model) {
+        InformationPanier informationPanier = Utilitaires.getDerniereCommandePanierDansSession(request);
  
-        // Cart have no products.
-        if (cartInfo.isEmpty()) {
-            // Redirect to shoppingCart page.
-            return "redirect:/shoppingCart";
-        } else if (!cartInfo.isValidCustomer()) {
-            // Enter customer info.
-            return "redirect:/shoppingCartCustomer";
+        // Panier n'a pas de produit ?.
+        if (informationPanier.isEmpty()) {
+            // Redirection vers la page principale.
+            return "redirect:/ecommerce";
+        } else if (!informationPanier.isClientValide()) {
+            // Entrer les informations client.
+            return "redirect:/panierClient";
         }
         try {
-            orderDAO.saveOrder(cartInfo);
+            commandeDAO.sauvegardeCommande(informationPanier);
         } catch (Exception e) {
-            // Need: Propagation.NEVER?
-            return "shoppingCartConfirmation";
+            // Propagation.NEVER?
+            return "confirmationPanier";
         }
-        // Remove Cart In Session.
-        Utils.removeCartInSession(request);
+        // Enlever panier dans la session.
+        Utilitaires.removePanierDansSession(request);
          
-        // Store Last ordered cart to Session.
-        Utils.storeLastOrderedCartInSession(request, cartInfo);
+        // Sauvegarde le dernier panier de la session
+        Utilitaires.enregistrerDerniereCommandePanierDansSession(request, informationPanier);
  
-        // Redirect to successful page.
+        // Redirection vers la page
         return "redirect:/shoppingCartFinalize";
     }
  
-    @RequestMapping(value = { "/shoppingCartFinalize" }, method = RequestMethod.GET)
-    public String shoppingCartFinalize(HttpServletRequest request, Model model) {
+    @RequestMapping(value = { "/finalisationPanier" }, method = RequestMethod.GET)
+    public String finalisePanier(HttpServletRequest request, Model model) {
  
-        CartInfo lastOrderedCart = Utils.getLastOrderedCartInSession(request);
+        InformationPanier derniereCommandePanier = Utilitaires.getDerniereCommandePanierDansSession(request);
  
-        if (lastOrderedCart == null) {
-            return "redirect:/shoppingCart";
+        if (derniereCommandePanier == null) {
+            return "redirect:/ecommerce";
         }
  
-        return "shoppingCartFinalize";
+        return "finalisationPanier";
     }
  
-    @RequestMapping(value = { "/productImage" }, method = RequestMethod.GET)
-    public void productImage(HttpServletRequest request, HttpServletResponse response, Model model,
+    @RequestMapping(value = { "/imageProduit" }, method = RequestMethod.GET)
+    public void imageProduit(HttpServletRequest request, HttpServletResponse response, Model model,
             @RequestParam("code") String code) throws IOException {
-        Product product = null;
+        Produit produit = null;
         if (code != null) {
-            product = this.produitDAO.findProduct(code);
+            produit = this.produitDAO.findProduit(code);
         }
-        if (product != null && product.getImage() != null) {
+        if (produit != null && produit.getImage() != null) {
             response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
-            response.getOutputStream().write(product.getImage());
+            response.getOutputStream().write(produit.getImage());
         }
         response.getOutputStream().close();
     }
